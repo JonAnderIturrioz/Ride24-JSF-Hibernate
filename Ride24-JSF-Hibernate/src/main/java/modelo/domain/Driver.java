@@ -4,12 +4,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//@Entity
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+
+
+@Entity
 public class Driver {
-	//@Id
+	@Id
 	private String email;
 	private String name;
-	//@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private List<Ride> rides = new ArrayList<Ride>();
 
 	public Driver() {
