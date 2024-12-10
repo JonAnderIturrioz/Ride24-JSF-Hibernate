@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -15,10 +16,13 @@ import javax.persistence.OneToMany;
 @Entity
 public class Driver {
 	@Id
+	@Column(nullable = false, unique = true)
 	private String email;
+	
 	private String name;
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	private List<Ride> rides = new ArrayList<Ride>();
+	
+	@OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Ride> rides = new ArrayList<>();
 
 	public Driver() {
 		super();
@@ -73,7 +77,7 @@ public class Driver {
 	 */
 	public boolean doesRideExists(String from, String to, Date date) {
 		for (Ride r : rides)
-			if ((java.util.Objects.equals(r.getFrom(), from)) && (java.util.Objects.equals(r.getTo(), to))
+			if ((java.util.Objects.equals(r.getOrigin(), from)) && (java.util.Objects.equals(r.getDestination(), to))
 					&& (java.util.Objects.equals(r.getDate(), date)))
 				return true;
 
@@ -100,7 +104,7 @@ public class Driver {
 		Ride r = null;
 		while (!found && index <= rides.size()) {
 			r = rides.get(++index);
-			if ((java.util.Objects.equals(r.getFrom(), from)) && (java.util.Objects.equals(r.getTo(), to))
+			if ((java.util.Objects.equals(r.getOrigin(), from)) && (java.util.Objects.equals(r.getDestination(), to))
 					&& (java.util.Objects.equals(r.getDate(), date)))
 				found = true;
 		}

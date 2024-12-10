@@ -5,41 +5,44 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
 public class Ride {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer rideNumber;
-	private String from;
-	private String to;
+	private String origin;
+	private String destination;
 	private int nPlaces;
 	private Date date;
 	private float price;
 	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "driver_email", nullable = false)
 	private Driver driver;
 
 	public Ride() {
 		super();
 	}
 
-	public Ride(Integer rideNumber, String from, String to, Date date, int nPlaces, float price, Driver driver) {
+	public Ride(Integer rideNumber, String origin, String dest, Date date, int nPlaces, float price, Driver driver) {
 		super();
 		this.rideNumber = rideNumber;
-		this.from = from;
-		this.to = to;
+		this.origin = origin;
+		this.destination = dest;
 		this.nPlaces = nPlaces;
 		this.date = date;
 		this.price = price;
 		this.driver = driver;
 	}
 
-	public Ride(String from, String to, Date date, int nPlaces, float price, Driver driver) {
+	public Ride(String origin, String dest, Date date, int nPlaces, float price, Driver driver) {
 		super();
-		this.from = from;
-		this.to = to;
+		this.origin = origin;
+		this.destination = dest;
 		this.nPlaces = nPlaces;
 		this.date = date;
 		this.price = price;
@@ -71,8 +74,8 @@ public class Ride {
 	 * @return the origin location
 	 */
 
-	public String getFrom() {
-		return from;
+	public String getOrigin() {
+		return origin;
 	}
 
 	/**
@@ -81,8 +84,8 @@ public class Ride {
 	 * @param origin to be set
 	 */
 
-	public void setFrom(String origin) {
-		this.from = origin;
+	public void setOrigin(String origin) {
+		this.origin = origin;
 	}
 
 	/**
@@ -91,8 +94,8 @@ public class Ride {
 	 * @return the destination location
 	 */
 
-	public String getTo() {
-		return to;
+	public String getDestination() {
+		return destination;
 	}
 
 	/**
@@ -100,8 +103,8 @@ public class Ride {
 	 * 
 	 * @param destination to be set
 	 */
-	public void setTo(String destination) {
-		this.to = destination;
+	public void setDestination(String destination) {
+		this.destination = destination;
 	}
 
 	/**
@@ -128,7 +131,7 @@ public class Ride {
 		this.date = date;
 	}
 
-	public float getnPlaces() {
+	public float getNPlaces() {
 		return nPlaces;
 	}
 
@@ -138,7 +141,7 @@ public class Ride {
 	 * @param nPlaces places to be set
 	 */
 
-	public void setBetMinimum(int nPlaces) {
+	public void setNPlaces(int nPlaces) {
 		this.nPlaces = nPlaces;
 	}
 
@@ -167,8 +170,9 @@ public class Ride {
 	public void setPrice(float price) {
 		this.price = price;
 	}
-
+	
+	@Override
 	public String toString() {
-		return rideNumber + ";" + ";" + from + ";" + to + ";" + date;
+		return rideNumber + ";" + ";" + origin + ";" + destination + ";" + date;
 	}
 }

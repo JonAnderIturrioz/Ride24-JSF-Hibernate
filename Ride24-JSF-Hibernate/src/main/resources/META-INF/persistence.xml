@@ -14,7 +14,7 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 			<property name="javax.persistence.jdbc.driver"
 				value="org.mariadb.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mariadb://localhost:3306/eventos" />
+				value="jdbc:mariadb://localhost:3306/rides24" />
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password"
 				value="admin" />
@@ -26,7 +26,7 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.connection.autocommit"
 				value="false" />
-			<property name="hibernate.connection.pool_size" value="1" />
+			<property name="hibernate.connection.pool_size" value="10" />
 			<property name="hibernate.current_session_context_class"
 				value="thread" />
 		</properties>
