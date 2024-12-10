@@ -26,7 +26,6 @@ public class HibernateDataAccess {
 
 		open();
 		initializeDB();
-		close();
 
 	}
 
@@ -81,9 +80,9 @@ public class HibernateDataAccess {
 			System.out.println("Db initialized");
 		} catch (Exception e) {
 			if (db.getTransaction().isActive()) {
-				 db.getTransaction().rollback();
-				 }
-				 System.out.println("Error: " + e.getMessage());
+				db.getTransaction().rollback();
+			}
+			System.out.println("Error: " + e.getMessage());
 		}
 	}
 
@@ -93,10 +92,9 @@ public class HibernateDataAccess {
 	 * @return collection of cities
 	 */
 	public List<String> getDepartCities() {
-		TypedQuery<String> query = db.createQuery("SELECT DISTINCT r.from FROM Ride r ORDER BY r.from", String.class);
+		TypedQuery<String> query = db.createQuery("SELECT DISTINCT r.origin FROM Ride r ORDER BY r.origin", String.class);
 		List<String> cities = query.getResultList();
 		return cities;
-
 	}
 
 	/**
@@ -107,7 +105,7 @@ public class HibernateDataAccess {
 	 * @return all the arrival destinations
 	 */
 	public List<String> getArrivalCities(String from) {
-		TypedQuery<String> query = db.createQuery("SELECT DISTINCT r.to FROM Ride r WHERE r.from=?1 ORDER BY r.to",
+		TypedQuery<String> query = db.createQuery("SELECT DISTINCT r.destination FROM Ride r WHERE r.origin=?1 ORDER BY r.destination",
 				String.class);
 		query.setParameter(1, from);
 		List<String> arrivingCities = query.getResultList();
@@ -135,23 +133,31 @@ public class HibernateDataAccess {
 				+ " date " + date);
 		try {
 			if (new Date().compareTo(date) > 0) {
-				throw new RideMustBeLaterThanTodayException(
-						ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.ErrorRideMustBeLaterThanToday"));
+				throw new RideMustBeLaterThanTodayException("ERROR: Ride must be later than today.");
 			}
 			db.getTransaction().begin();
 
-			Driver driver = db.find(Driver.class, driverEmail);
-			if (driver.doesRideExists(from, to, date)) {
+			try {
+				Driver driver = db.find(Driver.class, driverEmail);
+				if (driver.doesRideExists(from, to, date)) {
+					db.getTransaction().commit();
+					throw new RideAlreadyExistException("ERROR: Ride already exists.");
+				}
+				Ride ride = driver.addRide(from, to, date, nPlaces, price);
+				// next instruction can be obviated
+				db.persist(driver);
 				db.getTransaction().commit();
-				throw new RideAlreadyExistException(
-						ResourceBundle.getBundle("Etiquetas").getString("DataAccess.RideAlreadyExist"));
+				
+				return ride;
+				
+			} catch (Exception e) {
+				if (db.getTransaction().isActive()) {
+					db.getTransaction().rollback();
+				}
+				System.out.println("Error: " + e.getMessage());
+				return null;
 			}
-			Ride ride = driver.addRide(from, to, date, nPlaces, price);
-			// next instruction can be obviated
-			db.persist(driver);
-			db.getTransaction().commit();
-
-			return ride;
+			
 		} catch (NullPointerException e) {
 			// TODO Auto-generated catch block
 			db.getTransaction().commit();
@@ -172,7 +178,7 @@ public class HibernateDataAccess {
 		System.out.println(">> DataAccess: getRides=> from= " + from + " to= " + to + " date " + date);
 
 		List<Ride> res = new ArrayList<>();
-		TypedQuery<Ride> query = db.createQuery("SELECT r FROM Ride r WHERE r.from=?1 AND r.to=?2 AND r.date=?3",
+		TypedQuery<Ride> query = db.createQuery("SELECT r FROM Ride r WHERE r.origin=?1 AND r.destination=?2 AND r.date=?3",
 				Ride.class);
 		query.setParameter(1, from);
 		query.setParameter(2, to);
@@ -201,7 +207,7 @@ public class HibernateDataAccess {
 		Date lastDayMonthDate = UtilDate.lastDayMonth(date);
 
 		TypedQuery<Date> query = db.createQuery(
-				"SELECT DISTINCT r.date FROM Ride r WHERE r.from=?1 AND r.to=?2 AND r.date BETWEEN ?3 and ?4",
+				"SELECT DISTINCT r.date FROM Ride r WHERE r.origin=?1 AND r.destination=?2 AND r.date BETWEEN ?3 and ?4",
 				Date.class);
 
 		query.setParameter(1, from);

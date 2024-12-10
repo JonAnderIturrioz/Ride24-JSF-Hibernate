@@ -9,12 +9,13 @@ import exceptions.RideMustBeLaterThanTodayException;
 import modelo.domain.Ride;
 
 /**
- * It implements the business logic as a web service.
+ * It implements the business logic.
  */
 public class BLFacadeImplementationHibernate implements BLFacade {
-	HibernateDataAccess dbManager;
+	private static BLFacadeImplementationHibernate instance;
+	private HibernateDataAccess dbManager;
 
-	public BLFacadeImplementationHibernate() {
+	private BLFacadeImplementationHibernate() {
 		System.out.println("Creating BLFacadeImplementation instance with Hibernate DataAccess");
 
 		dbManager = new HibernateDataAccess();
@@ -22,12 +23,29 @@ public class BLFacadeImplementationHibernate implements BLFacade {
 		// dbManager.close();
 
 	}
+	
+	/*
+	 * private BLFacadeImplementationHibernate(HibernateDataAccess da) {
+	 * 
+	 * System.out.
+	 * println("Creating BLFacadeImplementation instance with DataAccess parameter"
+	 * );
+	 * 
+	 * dbManager = da; }
+	 */
 
-	public BLFacadeImplementationHibernate(HibernateDataAccess da) {
-
-		System.out.println("Creating BLFacadeImplementation instance with DataAccess parameter");
-
-		dbManager = da;
+	/**
+	 * Generates new BLFacade object if not already initialized.
+	 * Returns initialized BLFacade object.
+	 * 
+	 * @return static instance of the business logic object
+	 */
+	
+	public static BLFacadeImplementationHibernate getInstance() {
+		if (instance == null) {
+			instance = new BLFacadeImplementationHibernate(); // Default constructor
+		}
+		return instance;
 	}
 
 	/**
