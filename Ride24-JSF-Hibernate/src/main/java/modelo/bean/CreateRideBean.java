@@ -5,11 +5,15 @@ import java.util.Date;
 
 import org.primefaces.event.SelectEvent;
 
+import businessLogic.BLFacade;
+import businessLogic.BLFacadeImplementationHibernate;
+import configuration.UtilDate;
+import exceptions.RideAlreadyExistException;
+import exceptions.RideMustBeLaterThanTodayException;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
-import modelo.domain.Driver;
 import modelo.domain.Ride;
 
 @Named("createRide")
@@ -17,7 +21,7 @@ import modelo.domain.Ride;
 public class CreateRideBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	// BLFacade bl = new BLFacadeImplementationHibernate();
+	BLFacade bl = BLFacadeImplementationHibernate.getInstance();
 
 	private Date date;
 
@@ -91,9 +95,27 @@ public class CreateRideBean implements Serializable {
 	    }}
 
 	public void create() {
-		Driver d = new Driver();
-		Ride r = new Ride(departCity, arrivalCity, date, seats, price, d);
-		System.out.println(r.toString());
+				
+		FacesMessage message;
+		
+		try {
+			Ride r = bl.createRide(departCity, arrivalCity, UtilDate.newDate(2024, 11, 15), seats, price, "driver3@gmail.com");
+			message = new FacesMessage("Successfully created Ride "+r.toString());
+		} catch (RideMustBeLaterThanTodayException e) {
+			e.printStackTrace();
+			message = new FacesMessage("ERROR: The date must be later than today.");
+			message.setSeverity(FacesMessage.SEVERITY_ERROR);
+			
+		} catch (RideAlreadyExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			message = new FacesMessage("ERROR: This ride already exists.");
+			message.setSeverity(FacesMessage.SEVERITY_ERROR);
+		}
+        
+        FacesContext.getCurrentInstance().addMessage("submit", message);
+		
+		
 	}
 
 	/*
