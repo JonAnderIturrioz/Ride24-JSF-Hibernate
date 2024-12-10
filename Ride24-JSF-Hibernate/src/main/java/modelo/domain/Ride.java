@@ -2,17 +2,23 @@ package modelo.domain;
 
 import java.util.Date;
 
-//@Entity
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Ride {
-	//@Id
-	//@GeneratedValue
+	@Id
+	@GeneratedValue
 	private Integer rideNumber;
 	private String from;
 	private String to;
 	private int nPlaces;
 	private Date date;
 	private float price;
-	//@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
 	private Driver driver;
 
 	public Ride() {
