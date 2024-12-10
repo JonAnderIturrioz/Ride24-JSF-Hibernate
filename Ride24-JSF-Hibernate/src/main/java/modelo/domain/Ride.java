@@ -17,7 +17,7 @@ public class Ride {
 	private Integer rideNumber;
 	private String origin;
 	private String destination;
-	private int nPlaces;
+	private int seats;
 	private Date date;
 	private float price;
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -33,7 +33,7 @@ public class Ride {
 		this.rideNumber = rideNumber;
 		this.origin = origin;
 		this.destination = dest;
-		this.nPlaces = nPlaces;
+		this.seats = nPlaces;
 		this.date = date;
 		this.price = price;
 		this.driver = driver;
@@ -43,7 +43,7 @@ public class Ride {
 		super();
 		this.origin = origin;
 		this.destination = dest;
-		this.nPlaces = nPlaces;
+		this.seats = nPlaces;
 		this.date = date;
 		this.price = price;
 		this.driver = driver;
@@ -131,8 +131,8 @@ public class Ride {
 		this.date = date;
 	}
 
-	public float getNPlaces() {
-		return nPlaces;
+	public float getSeats() {
+		return seats;
 	}
 
 	/**
@@ -141,8 +141,8 @@ public class Ride {
 	 * @param nPlaces places to be set
 	 */
 
-	public void setNPlaces(int nPlaces) {
-		this.nPlaces = nPlaces;
+	public void setSeats(int nPlaces) {
+		this.seats = nPlaces;
 	}
 
 	/**
@@ -173,6 +173,6 @@ public class Ride {
 	
 	@Override
 	public String toString() {
-		return rideNumber + ";" + ";" + origin + ";" + destination + ";" + date;
+		return rideNumber + ";" + origin + ";" + destination + ";" + date + ";" + seats + ";" + price;
 	}
 }

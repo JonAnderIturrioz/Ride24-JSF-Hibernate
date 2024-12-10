@@ -14,24 +14,48 @@
 			<table>
 				<tr>
 					<td>Departure city</td>
-					<td><h:selectOneMenu id="departCity" value="#{queryRides.departCity}">
+					<td><h:selectOneMenu id="departCity"
+							value="#{queryRides.departCity}">
 							<f:selectItems value="#{queryRides.departCities}" />
-							<f:ajax listener="#{queryRides.setDepartCity}" render="arrivalCity" />
+							<f:ajax listener="#{queryRides.setDepartCity}"
+								render="arrivalCity" />
 						</h:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td>Arrival city</td>
-					<td><h:selectOneMenu id="arrivalCity" value="#{queryRides.arrivalCity}">
+					<td><h:selectOneMenu id="arrivalCity"
+							value="#{queryRides.arrivalCity}">
 							<f:selectItems value="#{queryRides.destinationCities}" />
 						</h:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td>Fecha (con PrimeFaces):</td>
+					<td>Date:</td>
 					<td><p:calendar id="date" value="#{queryRides.date}"
-							navigator="true" pattern="dd/MM/yyyy" mode="inline" /></td>
+							navigator="true" pattern="dd/MM/yyyy" mode="inline">
+							<p:ajax event="dateSelect" listener="#{queryRides.setRides}"
+								update="ridesTable" />
+						</p:calendar></td>
 				</tr>
 				<tr>
-					<td><h:commandButton value="Go Back" action="queryRidesToMain" immediate="true"/></td>
+					<h:dataTable id="ridesTable" value="#{queryRides.rides}" var="item">
+							<f:facet name="header">Rides table:</f:facet>
+							<h:column>
+								<f:facet name="header">Ride Id</f:facet>#{item.rideNumber}</h:column>
+							<h:column>
+								<f:facet name="header">Departure</f:facet>#{item.origin}</h:column>
+							<h:column>
+								<f:facet name="header">Destination</f:facet>#{item.destination}</h:column>
+							<h:column>
+								<f:facet name="header">Avail. Seats</f:facet>#{item.seats}</h:column>
+							<h:column>
+								<f:facet name="header">Date</f:facet>#{item.date}</h:column>
+							<h:column>
+								<f:facet name="header">Price</f:facet>#{item.price}</h:column>
+						</h:dataTable>
+				</tr>
+				<tr>
+					<td><h:commandButton value="Go Back" action="queryRidesToMain"
+							immediate="true" /></td>
 
 				</tr>
 			</table>

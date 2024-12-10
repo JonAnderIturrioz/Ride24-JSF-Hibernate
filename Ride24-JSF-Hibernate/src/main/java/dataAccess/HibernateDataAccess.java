@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -26,6 +25,7 @@ public class HibernateDataAccess {
 
 		open();
 		initializeDB();
+		close();
 
 	}
 
@@ -189,6 +189,11 @@ public class HibernateDataAccess {
 		}
 		return res;
 	}
+	
+	public Ride getRideFromId(int rideNumber) {
+		Ride r = db.find(Ride.class, rideNumber);
+		return r;
+	}
 
 	/**
 	 * This method retrieves from the database the dates a month for which there are
@@ -229,5 +234,7 @@ public class HibernateDataAccess {
 		db.close();
 		System.out.println("DataAcess closed");
 	}
+
+	
 
 }

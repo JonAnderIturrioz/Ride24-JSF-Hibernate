@@ -1,18 +1,25 @@
 package modelo.bean;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.primefaces.event.SelectEvent;
+
+import businessLogic.BLFacade;
+import businessLogic.BLFacadeImplementationHibernate;
+import configuration.UtilDate;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
+import modelo.domain.Ride;
 
 @Named("queryRides")
 @SessionScoped
 public class QueryRidesBean implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	BLFacade bl = BLFacadeImplementationHibernate.getInstance();
+
 	private Date date;
 
 	private String departCity;
@@ -21,19 +28,20 @@ public class QueryRidesBean implements Serializable {
 	private String arrivalCity;
 	private List<String> destinationCities;
 
-	// private List<Ride> rides;
-	// private Ride ride;
+	private List<Date> daysWithRides;
+
+	private List<Ride> rides;
 
 	public QueryRidesBean() {
-		departCities = new ArrayList<String>();// bl.getDepartCities();
-		departCities.add("Bilbo");
-		departCities.add("Donostia");
-		departCities.add("Gasteiz");
+		departCities = bl.getDepartCities();
 		departCity = departCities.get(0);
-		destinationCities = new ArrayList<String>();// bl.getDestinationCities(departCity);
-		destinationCities.add("Donostia");
-		destinationCities.add("Gasteiz");
+
+		destinationCities = bl.getDestinationCities(departCity);
 		arrivalCity = destinationCities.get(0);
+
+		setDaysWithRides(bl.getThisMonthDatesWithRides(departCity, arrivalCity, UtilDate.trim(new Date())));
+
+		rides = bl.getRides(departCity, arrivalCity, UtilDate.trim(new Date()));
 	}
 
 	public Date getDate() {
@@ -50,16 +58,21 @@ public class QueryRidesBean implements Serializable {
 
 	public void setDepartCity(String departCity) {
 		this.departCity = departCity;
-		//this.destinationCities = bl.getDestinationCities(departCity);
+		this.destinationCities = bl.getDestinationCities(departCity);
 
-		if ("Bilbo".equals(departCity)) {
-			this.destinationCities = Arrays.asList("Donostia", "Gasteis");
-		} else if ("Donostia".equals(departCity)) {
-			this.destinationCities = Arrays.asList("Bilbo", "Gasteiz");
-		} else if ("Gasteiz".equals(departCity)) {
-			this.destinationCities = Arrays.asList("Bilbo", "Donostia");
-		}
-
+		/*
+		 * ExecutorService threadpool = Executors.newCachedThreadPool();
+		 * Future<List<String>> futureTask = threadpool.submit(() ->
+		 * bl.getDestinationCities(departCity));
+		 * 
+		 * while (!futureTask.isDone()) {
+		 * System.out.println("FutureTask is not finished yet..."); } try {
+		 * this.destinationCities = futureTask.get(); } catch (InterruptedException |
+		 * ExecutionException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); }
+		 * 
+		 * threadpool.shutdown();
+		 */
 	}
 
 	public List<String> getDepartCities() {
@@ -85,4 +98,24 @@ public class QueryRidesBean implements Serializable {
 	public void setDestinationCities(List<String> destinationCities) {
 		this.destinationCities = destinationCities;
 	}
+
+	public List<Date> getDaysWithRides() {
+		return daysWithRides;
+	}
+
+	public void setDaysWithRides(List<Date> daysWithRides) {
+		this.daysWithRides = daysWithRides;
+	}
+
+	public List<Ride> getRides() {
+		return rides;
+	}
+
+	public void setRides(SelectEvent<Date> event) {
+		Date selectedDate = event.getObject(); // Extract the selected date
+		this.date = selectedDate; // Update the bean's date
+		this.rides = bl.getRides(departCity, arrivalCity, UtilDate.trim(selectedDate)); // Fetch the rides
+
+	}
+
 }

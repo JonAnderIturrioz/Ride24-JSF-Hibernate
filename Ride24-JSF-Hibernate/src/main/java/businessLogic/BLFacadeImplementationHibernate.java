@@ -96,6 +96,13 @@ public class BLFacadeImplementationHibernate implements BLFacade {
 		dbManager.close();
 		return rides;
 	}
+	
+	public Ride getRideFromId(int rideNumber) {
+		dbManager.open();
+		Ride ride = dbManager.getRideFromId(rideNumber);
+		dbManager.close();
+		return ride;
+	}
 
 	/**
 	 * {@inheritDoc}

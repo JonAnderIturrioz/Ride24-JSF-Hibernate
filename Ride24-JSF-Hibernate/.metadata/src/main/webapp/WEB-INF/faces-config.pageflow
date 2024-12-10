@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf17338701773510" configfile="/Ride24-JSF-Hibernate/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="Main.xhtml" x="338" y="370" id="pf17338702359461" referenceLink="//@navigationRule.2/@navigationCase.0/@toViewId|" outlinks="pf17338702359462 pf17338702359463" inlinks="pf17338702359464 pf17338702359465" path="/Main.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="CreateRide.xhtml" x="122" y="178" id="pf17338702359466" referenceLink="//@navigationRule.1/@fromViewId|" outlinks="pf17338702359464" inlinks="pf17338702359462" path="/CreateRide.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="QueryRides.xhtml" x="122" y="562" id="pf17338702359467" referenceLink="//@navigationRule.2/@fromViewId|" outlinks="pf17338702359465" inlinks="pf17338702359463" path="/QueryRides.xhtml"/>
+  <links id="pf17338702359462" target="pf17338702359466" source="pf17338702359461" outcome="mainToCreateRide"/>
+  <links id="pf17338702359463" target="pf17338702359467" source="pf17338702359461" outcome="mainToQueryRides"/>
+  <links id="pf17338702359464" target="pf17338702359461" source="pf17338702359466" outcome="createRideToMain"/>
+  <links id="pf17338702359465" target="pf17338702359461" source="pf17338702359467" outcome="queryRidesToMain"/>
+</pageflow:Pageflow>
