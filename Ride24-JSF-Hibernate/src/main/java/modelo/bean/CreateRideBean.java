@@ -3,6 +3,8 @@ package modelo.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.primefaces.event.SelectEvent;
+
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -73,18 +75,20 @@ public class CreateRideBean implements Serializable {
 		this.price = price;
 	}
 
-	public void validateDate() {
-		// Get the current date
-		Date currentDate = new Date();
+	public void validateDate(SelectEvent<Date> event) {
+	    // Retrieve the selected date from the event
+	    Date selectedDate = event.getObject();
 
-		// Check if the selected date is before today
-		if (date != null && date.before(currentDate)) {
-			// Add a validation error message to be displayed in the JSF page
-			FacesMessage message = new FacesMessage("The date must be later than today.");
-			message.setSeverity(FacesMessage.SEVERITY_ERROR);
-			FacesContext.getCurrentInstance().addMessage(null, message);
-		}
-	}
+	    // Get the current date
+	    Date currentDate = new Date();
+
+	    // Check if the selected date is before today
+	    if (selectedDate != null && selectedDate.before(currentDate)) {
+	        // Add a validation error message to be displayed in the JSF page
+	        FacesMessage message = new FacesMessage("The date must be later than today.");
+	        message.setSeverity(FacesMessage.SEVERITY_ERROR);
+	        FacesContext.getCurrentInstance().addMessage("date", message);
+	    }}
 
 	public void create() {
 		Driver d = new Driver();
