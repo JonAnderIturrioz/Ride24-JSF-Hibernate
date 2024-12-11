@@ -3,22 +3,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
 <f:view>
 	<h:head>
-		<title>Rides24 JavaServer Faces</title>
+		<title>Rides24 JavaServer Faces</title>		
 	</h:head>
 	<h:body>
 		<h:form>
-			<h3>Placeholder text, you are currently in Query Rides.</h3>
+			<h1>Query Rides</h1>
 			<table>
 				<tr>
 					<td>Departure city</td>
 					<td><h:selectOneMenu id="departCity"
 							value="#{queryRides.departCity}">
 							<f:selectItems value="#{queryRides.departCities}" />
-							<f:ajax listener="#{queryRides.setDepartCity}"
-								render="arrivalCity" />
+							<f:ajax render="arrivalCity"/>
 						</h:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -26,6 +27,7 @@
 					<td><h:selectOneMenu id="arrivalCity"
 							value="#{queryRides.arrivalCity}">
 							<f:selectItems value="#{queryRides.destinationCities}" />
+							<f:ajax listener="#{queryRides.setEmptyRides}" render="ridesTable"/>
 						</h:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -35,23 +37,24 @@
 							<p:ajax event="dateSelect" listener="#{queryRides.setRides}"
 								update="ridesTable" />
 						</p:calendar></td>
+
 				</tr>
 				<tr>
 					<h:dataTable id="ridesTable" value="#{queryRides.rides}" var="item">
-							<f:facet name="header">Rides table:</f:facet>
-							<h:column>
-								<f:facet name="header">Ride Id</f:facet>#{item.rideNumber}</h:column>
-							<h:column>
-								<f:facet name="header">Departure</f:facet>#{item.origin}</h:column>
-							<h:column>
-								<f:facet name="header">Destination</f:facet>#{item.destination}</h:column>
-							<h:column>
-								<f:facet name="header">Avail. Seats</f:facet>#{item.seats}</h:column>
-							<h:column>
-								<f:facet name="header">Date</f:facet>#{item.date}</h:column>
-							<h:column>
-								<f:facet name="header">Price</f:facet>#{item.price}</h:column>
-						</h:dataTable>
+						<f:facet name="header">Rides table:</f:facet>
+						<h:column>
+							<f:facet name="header">Ride Id</f:facet>#{item.rideNumber}</h:column>
+						<h:column>
+							<f:facet name="header">Departure</f:facet>#{item.origin}</h:column>
+						<h:column>
+							<f:facet name="header">Destination</f:facet>#{item.destination}</h:column>
+						<h:column>
+							<f:facet name="header">Avail. Seats</f:facet>#{item.seats}</h:column>
+						<h:column>
+							<f:facet name="header">Date</f:facet>#{item.date}</h:column>
+						<h:column>
+							<f:facet name="header">Price</f:facet>#{item.price}</h:column>
+					</h:dataTable>
 				</tr>
 				<tr>
 					<td><h:commandButton value="Go Back" action="queryRidesToMain"

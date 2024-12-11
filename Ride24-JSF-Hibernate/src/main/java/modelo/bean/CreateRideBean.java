@@ -10,14 +10,13 @@ import businessLogic.BLFacadeImplementationHibernate;
 import configuration.UtilDate;
 import exceptions.RideAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
-import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
-import modelo.domain.Ride;
 
 @Named("createRide")
-@SessionScoped
+@RequestScoped
 public class CreateRideBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -99,8 +98,8 @@ public class CreateRideBean implements Serializable {
 		FacesMessage message;
 		
 		try {
-			Ride r = bl.createRide(departCity, arrivalCity, UtilDate.newDate(2024, 11, 15), seats, price, "driver3@gmail.com");
-			message = new FacesMessage("Successfully created Ride "+r.toString());
+			bl.createRide(departCity, arrivalCity, UtilDate.trim(date), seats, price, "driver3@gmail.com");
+			message = new FacesMessage("Successfully created Ride from "+ departCity + " to " + arrivalCity + " on " + date + ", with " + seats + " seats and a fee of " + price );
 		} catch (RideMustBeLaterThanTodayException e) {
 			e.printStackTrace();
 			message = new FacesMessage("ERROR: The date must be later than today.");
