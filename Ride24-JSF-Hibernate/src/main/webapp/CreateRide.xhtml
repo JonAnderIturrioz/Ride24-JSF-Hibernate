@@ -10,7 +10,7 @@
 	</h:head>
 	<h:body>
 		<h:form>
-			<h3>Placeholder text, you are currently in Create Ride.</h3>
+			<h1>Create Ride.</h1>
 			<table>
 				<tr>
 					<td>Departure city</td>
@@ -61,15 +61,15 @@
 							<p:ajax event="dateSelect" listener="#{createRide.validateDate}"
 								update="dateError" />
 						</p:calendar></td>
-					<td><h:messages id="dateError" for="date" styleClass="error" /></td>
+					<td><p:messages id="dateError" for="date" styleClass="error" /></td>
 				</tr>
 				<tr>
-					<td><h:commandButton value="Submit"
+					<td><p:commandButton value="Submit"
 							action="#{createRide.create}" /></td>
-					<td><h:messages for="submit" styleClass="error" /></td>
+					<td><p:messages for="submit" styleClass="error" /></td>
 				</tr>
 				<tr>
-					<td><h:commandButton value="Go Back" action="createRideToMain"
+					<td><p:commandButton value="Go Back" action="createRideToMain"
 							immediate="true" /></td>
 
 				</tr>
